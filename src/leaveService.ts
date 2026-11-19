@@ -51,7 +51,9 @@ export async function getLeaveForPeriod(
 export function totalDaysTaken(rows: LeaveRow[]): number {
   let total = 0;
   for (let i = 0; i < rows.length; i++) {
-    total += rows[i].day_count;
+    if (rows[i].status === "approved") {
+      total += rows[i].day_count;
+    }
   }
   return total;
 }
