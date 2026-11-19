@@ -9,6 +9,7 @@ export interface LeaveRow {
   end_date: string; // 'YYYY-MM-DD'
   day_count: number;
   status: "pending" | "approved" | "rejected";
+  department: string;
 }
 
 export async function getLeaveForPeriod(
