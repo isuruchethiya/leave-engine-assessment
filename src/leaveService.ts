@@ -20,37 +20,30 @@ export async function getLeaveForPeriod(
   let rows: LeaveRow[];
   if (statusFilter) {
     rows = await db.query<LeaveRow>(
-      `SELECT * FROM leave_requests
-       WHERE company_id = $1
-         AND status = $2
-         AND start_date >= $3
-         AND end_date <= $4
-       ORDER BY start_date`,
+      `SELECT lr.*, COALESCE(d.name, 'Unknown') AS department 
+       FROM leave_requests lr
+       LEFT JOIN employees e ON e.id = lr.employee_id 
+       LEFT JOIN departments d ON d.id = e.department_id 
+       WHERE lr.company_id = $1
+         AND lr.status = $2
+         AND lr.start_date >= $3
+         AND lr.end_date <= $4
+       ORDER BY lr.start_date`,
       [companyId, statusFilter, from, to],
     );
   } else {
     rows = await db.query<LeaveRow>(
-      `SELECT * FROM leave_requests
-       WHERE company_id = $1
-         AND start_date >= $2
-         AND end_date <= $3
-       ORDER BY start_date`,
+      `SELECT lr.*, COALESCE(d.name, 'Unknown') AS department 
+       FROM leave_requests lr
+       LEFT JOIN employees e ON e.id = lr.employee_id 
+       LEFT JOIN departments d ON d.id = e.department_id 
+       WHERE lr.company_id = $1
+         AND lr.start_date >= $2
+         AND lr.end_date <= $3
+       ORDER BY lr.start_date`,
       [companyId, from, to],
     );
   }
-
-  // Attach each employee's department name for display.
-  for (const row of rows) {
-    const dept = await db.query<{ name: string }>(
-      `SELECT d.name
-       FROM departments d
-       JOIN employees e ON e.department_id = d.id
-       WHERE e.id = $1`,
-      [row.employee_id],
-    );
-    (row as any).department = dept[0]?.name ?? "Unknown";
-  }
-
   return rows;
 }
 
