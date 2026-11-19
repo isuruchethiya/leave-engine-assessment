@@ -24,7 +24,7 @@ export async function getLeaveForPeriod(
        WHERE company_id = $1
          AND status = $2
          AND start_date >= $3
-         AND end_date < $4
+         AND end_date <= $4
        ORDER BY start_date`,
       [companyId, statusFilter, from, to],
     );
@@ -33,7 +33,7 @@ export async function getLeaveForPeriod(
       `SELECT * FROM leave_requests
        WHERE company_id = $1
          AND start_date >= $2
-         AND end_date < $3
+         AND end_date <= $3
        ORDER BY start_date`,
       [companyId, from, to],
     );
