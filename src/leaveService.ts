@@ -31,10 +31,11 @@ export async function getLeaveForPeriod(
   } else {
     rows = await db.query<LeaveRow>(
       `SELECT * FROM leave_requests
-       WHERE start_date >= $1
-         AND end_date < $2
+       WHERE company_id = $1
+         AND start_date >= $2
+         AND end_date < $3
        ORDER BY start_date`,
-      [from, to],
+      [companyId, from, to],
     );
   }
 
