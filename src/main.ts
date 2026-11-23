@@ -3,6 +3,7 @@ import { loadEmployees, loadHolidays, loadLeaveRecords } from "./csv";
 import { accruedDays } from "./accrual";
 import { processLeave } from "./leave";
 import type { InvalidRecord } from "./leave";
+import { scopeToCompany } from "./scope";
 
 function getArg(name: string): string | undefined {
     const args = process.argv.slice(2);
@@ -45,12 +46,12 @@ function main(): void {
     const holidays = loadHolidays(path.join(root, "public_holidays.csv"));
 
 
-    const inScope = employees.filter((e) => e.companyId === companyId);
+     const scoped = scopeToCompany(companyId, employees, records);
 
     const balanceRows: string[][] = [];
     const invalidAll: InvalidRecord[] = [];
 
-    for (const e of inScope) {
+    for (const e of scoped.employees) {
         const accrued = accruedDays(e.joinDate, asOf, e.probationMonths, e.lastWorkingDay);
         const { taken, invalid } = processLeave(e, records, holidays, asOf);
         invalidAll.push(...invalid);
