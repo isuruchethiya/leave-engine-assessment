@@ -1,0 +1,6 @@
+employee_id,name,company_id,join_date,probation_months,resignation_date,last_working_day
+E001,Nimal Perera,1,2025-01-15,3,,
+E002,Kamala Silva,1,2026-06-01,3,,
+E003,Ruwan Fernando,1,2024-11-20,6,2026-09-30,2026-08-15
+E004,Dilani Jayawardena,2,2026-02-10,3,,
+E005,Sunil Bandara,1,2026-08-20,3,,
